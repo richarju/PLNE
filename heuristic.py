@@ -1,0 +1,7 @@
+import objects
+import model
+
+
+"""
+PUT THE TWO HEURISTIC MODELS IN THIS FILE WITHOUT EXECUTION
+"""

@@ -1,0 +1,21 @@
+In Db Ul Lv Ct Cl Fl Bd Ld Pw Pb Ob
+Ob In Db Ul Lv Ct Cl Fl Bd Ld Pw Pb
+Pb In Db Ul Lv Ct Cl Fl Bd Ld Pw
+Pw In Lv
+Bd In Db Fl Ct Cl
+Ld In Ul
+Cl In Db
+Ct In Db
+Fl In Db
+Lv In
+Db In
+Ul In
+In
+BAG TLT FUL CAT CLN POT PSH
+BAG 200 Ld Ul
+TLT 300 Lv
+FUL 200 Fl
+CAT 400 Ct
+CLN 400 Cl
+POT 300 Pw
+PSH 100 Pb

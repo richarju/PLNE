@@ -1,0 +1,13 @@
+objects.vehicule.__init__ : Ajout des tâches Beginning et Ending. Par défaut ces deux taches seront dans self.tasks.
+
+import_data/make_all_tasks : ajout Ajout d'instances de type "TypeBegin" et "TypeEnding" à la liste de tâches
+
+objects.VehiculeType : ajout de TypeEnding et TypeBegin à la liste des tâches faisables
+
+import_data.make_task_types : ajout de BeginningType et EndingType dans les types créés
+
+solver : ajout fct obj et contraintes.
+
+objects.Tasks : ajout fonction delta2 qui dit si la tâche peut être faite par un type de véhicule spécifié
+
+model?Problem : ajout d'une fonction count_types_vehicles, pourfaire une liste des effectifs de chaque flotte de véhicules
