@@ -16,9 +16,9 @@ def make_vehicle_types():
     rule_file = open("data/activites_vehicules_1.txt")
     data = rule_file.readlines()
     returnable_data = list()
-    for line in data[14:]:
+    for i,line in enumerate(data[14:]):
         s_line = line.split()
-        returnable_data.append(objects.VehiculeType(s_line[0], int(s_line[1]), s_line[2:]))
+        returnable_data.append(objects.VehiculeType(s_line[0], int(s_line[1]), s_line[2:], i))
     return returnable_data
 
 

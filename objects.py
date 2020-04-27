@@ -78,10 +78,11 @@ class VehiculeType:
     """
     types de véhicules utilisés sur la plateforme
     """
-    def __init__(self, name, speed, can_do_names):
+    def __init__(self, name, speed, can_do_names, base):
         self.name = name
         self.speed = speed
         self.can_do_names = ["TypeBegin", "TypeEnding"] + can_do_names  # liste des noms d'activités que le véhicule peut faire, il peut faire d'office les activités début et fin
+        self.base = base
 
     def __repr__(self):
         return "(--V_Type-- {} SP{})".format(self.name, self.speed)

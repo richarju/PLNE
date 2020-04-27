@@ -21,7 +21,7 @@ class Problem:
         # creation des types de vehicules disponibles sur la plateforme
         self.vehicle_types = data.make_vehicle_types()
         # Ajout de la passerelle (NO VEHICLE REQUIRED --> NVR) pour pouvoir attribuer chaque tache a un vehicule
-        self.vehicle_types.append(obj.VehiculeType('NVR', 0, ['In', 'Ob', 'Bd', 'Db']))
+        self.vehicle_types.append(obj.VehiculeType('NVR', 1000000, ['In', 'Ob', 'Bd', 'Db'], 1))
         # Attribution des types de véhicules aux types de taches
         self.set_up_what_vehicle_types_can_do_a_task_types()
 
@@ -34,7 +34,7 @@ class Problem:
         self.all_tasks = data.make_all_tasks(self.flights)
 
         # creation de la flotte de vehicules
-        self.vehicles = self.generate_vehicles() # test: self.vehicles.append(obj.Vehicule(self.vehicle_types[0]))
+        self.vehicles = self.generate_vehicles()  # test: self.vehicles.append(obj.Vehicule(self.vehicle_types[0]))
 
         self.decision_x = list()
 
