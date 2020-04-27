@@ -1,6 +1,6 @@
 import import_data as data
 import objects as obj
-import numpy as np
+# import numpy as np
 
 
 class Problem:
