@@ -1,4 +1,5 @@
 import model as pbs
+import numpy as np
 import pulp
 
 
@@ -12,12 +13,25 @@ def solve_model_pulp(pb):
     prob = pulp.LpProblem("PAE", pulp.LpMinimize)  # OK
     # print(prob)
     # On definit une matrice binaire de decision x
-    x = pulp.LpVariable.dicts("x", [(v, i, j) for i in range(n_task-1) for j in
-                                    range(n_task-1) for v in range(n_vehicles)], cat="Binary")  # OK
+
+
+
+
+    x = pulp.LpVariable.dicts("x", [(v, i, j) for i in range(n_task) for j in
+                                    range(n_task) for v in range(n_vehicles)], cat="Binary")
 
     # On definit une matrice binaire de decision y
-    t = pulp.LpVariable.dicts("t", [(i) for i in range(n_task-1)], lowBound=0, cat="Integer")
+    t = pulp.LpVariable.dicts("t", [i for i in range(n_task)], lowBound=0, cat="Integer")
 
+
+    prob += pulp.lpSum(x[k, 0, j] for k in range(n_vehicles)
+                       for j in range(n_task)), "Objective : Number of vehicles leaving"
+
+    prob.solve(pulp.GLPK(msg=1))
+    print("Statut:", pulp.LpStatus[prob.status])
+
+
+"""
     prob += pulp.lpSum(x[k, 0, j] for k in range(n_vehicles)
                        for j in range(n_task-1)), "Objective : Number of vehicles"
     # print(prob)
@@ -82,11 +96,10 @@ def solve_model_pulp(pb):
             prob += x[v, i, pb.all_tasks[0]] == x[v, pb.all_tasks[len(pb.all_tasks)], i]
             prob += x[v, i, pb.all_tasks[0]] == 0
     '''
-    prob.solve(pulp.GLPK_CMD(msg=1))
-    print("Statut:", pulp.LpStatus[prob.status])
+    
 
 
-"""
+#
     
 
     
@@ -99,7 +112,7 @@ def solve_model_pulp(pb):
     
 
     
-    '''
+    # '''
     # Contraintes de couverture
     for i in range(pb.nb_vols):
         prob += pulp.lpSum([x[i, k] for k in range(pb.nb_flottes)]) == 1, "contrainte de couverture {}".format(i)
@@ -153,4 +166,6 @@ def solve_model_pulp(pb):
 
     # La valeur de la fonction objectif a l'issue de la resolution est affichee
     print("Valeur de la fonction objectif = ", pulp.value(prob.objective))
+    
+
 """
