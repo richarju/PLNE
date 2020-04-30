@@ -6,43 +6,38 @@ import pulp
 def solve_model_pulp(pb):
 
     m = 10000
-    # On definit le probleme a minimiser
     n_task = len(pb.all_tasks)
     n_vehicles = len(pb.vehicles)
-    # print(pb.vehicles)
-    prob = pulp.LpProblem("PAE", pulp.LpMinimize)  # OK
-    # print(prob)
-    # On definit une matrice binaire de decision x
 
-
+    prob = pulp.LpProblem("PAE", pulp.LpMinimize)
 
 
     x = pulp.LpVariable.dicts("x", [(v, i, j) for i in range(n_task) for j in
                                     range(n_task) for v in range(n_vehicles)], cat="Binary")
 
-    # On definit une matrice binaire de decision y
     t = pulp.LpVariable.dicts("t", [i for i in range(n_task)], lowBound=0, cat="Integer")
 
-
+    # OBJ
     prob += pulp.lpSum(x[k, 0, j] for k in range(n_vehicles)
                        for j in range(n_task)), "Objective : Number of vehicles leaving"
 
-    prob.solve(pulp.GLPK(msg=1))
+    # C_1 : FLOW
+    for v in range(n_vehicles):
+        for j in range(1, n_task - 1):  # Sur toutes les tâches qui ne sont ni début ni fin
+            prob += pulp.lpSum(x[v, i, j] for i in range(1, n_task-1)) == \
+                    pulp.lpSum(x[v, j, i] for i in range(1, n_task-1))
+
+        prob += pulp.lpSum(x[v, 1, k] for k in range(n_task - 1)) - pulp.lpSum(
+            x[v, k, n_task - 2] for k in range(n_task - 1)) == 0
+
+    prob.solve(pulp.GLPK_CMD(msg=1))
     print("Statut:", pulp.LpStatus[prob.status])
 
 
 """
-    prob += pulp.lpSum(x[k, 0, j] for k in range(n_vehicles)
-                       for j in range(n_task-1)), "Objective : Number of vehicles"
+    
     # print(prob)
-    # Contrainte de flot
-    for v in range(n_vehicles):
-        for j in range(1, n_task-1):  # Sur toutes les tâches qui ne sont ni début ni fin
-            prob += pulp.lpSum(x[v, i, j] for i in range(1, n_task-2)) == \
-                    pulp.lpSum(x[v, j, i] for i in range(1, n_task-2))
-
-        prob += pulp.lpSum(x[v, 1, k] for k in range(n_task-1)) - pulp.lpSum(x[v, k, n_task-2] for k in range(n_task-1)) == 0
-
+    
     # Cohérence temporelle
     tasks = pb.all_tasks
     for v in range(n_vehicles):
