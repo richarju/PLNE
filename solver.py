@@ -20,19 +20,22 @@ def solve_model_pulp(pb):
     x = pulp.LpVariable.dicts("x", [(v, i, j) for i in range(n_task) for j in
                                     range(n_task) for v in range(n_vehicles)], cat="Binary")  # OK
 
-    t = pulp.LpVariable.dicts("t", [(i) for i in range(n_task)], lowBound=0, cat="Integer")
+    t = pulp.LpVariable.dicts("t", [i for i in range(n_task)], lowBound=0, cat="Integer")
 
     # --------OBJECTIVE----------ok
     prob += pulp.lpSum(x[k, 0, j] for k in range(n_vehicles) for j in range(n_task))
 
     # --------CONTRAINTE FLOW----------ok
     for v in range(n_vehicles):
-        for j in range(1, n_task-1):  # Sur toutes les tâches qui ne sont ni début ni fin
-            prob += pulp.lpSum(x[v, i, j] for i in range(1, n_task-1)) == \
-                    pulp.lpSum(x[v, j, i] for i in range(1, n_task-1))
+        for j in range(1, n_task - 1):  # Sur toutes les tâches qui ne sont ni début ni fin
+            prob += pulp.lpSum(x[v, i, j] for i in range(1, n_task-1)) == pulp.lpSum(x[v, j, i] for i in range(1, n_task-1))
 
-        # prob += pulp.lpSum(x[v, 1, k] for k in range(n_task-1)) - pulp.lpSum(x[v, k, n_task-2] for k in range(n_task-1)) == 0
+        prob += pulp.lpSum(x[v, 0, j] for j in range(n_task)) == pulp.lpSum(x[v, j, n_task-1-] for j in range(n_task))
 
+    prob.solve(pulp.GLPK_CMD(msg=1))
+    print("Statut:", pulp.LpStatus[prob.status])
+
+    """
         # --------CONTRAINTE COHERENCE TEMPORELLE----------
     tasks = pb.all_tasks
     for v in range(n_vehicles):
@@ -90,11 +93,10 @@ def solve_model_pulp(pb):
             prob += x[v, i, pb.all_tasks[0]] == x[v, pb.all_tasks[len(pb.all_tasks)], i]
             prob += x[v, i, pb.all_tasks[0]] == 0
     '''
-    prob.solve(pulp.GLPK_CMD(msg=1))
-    print("Statut:", pulp.LpStatus[prob.status])
+    
 
 
-"""
+
     
 
     
