@@ -53,8 +53,8 @@ def solve_model_pulp(pb):
     #BON
     #Toutes les tâches sont effectuées une et une seule fois
     for j in range(1, n_task-1):
-        prob += pulp.lpSum(x[v,i,j]for v in range(n_vehicles) for i in range(n_task-1)) == 1
-        #Les tâches ne peuvent être effectuées que par les bons véhicules
+        prob += pulp.lpSum(x[v, i, j]for v in range(n_vehicles) for i in range(n_task-1)) == 1
+        # Les tâches ne peuvent être effectuées que par les bons véhicules
         for v in range(n_vehicles):
             prob += pulp.lpSum(x[v,i,j]for i in range(n_task-1)) <= pb.all_tasks[j].delta(pb.vehicles[v])
 
@@ -69,6 +69,7 @@ def solve_model_pulp(pb):
             prob += t[pb.all_tasks.index(task)] >= aircraft.m_a
         elif task.type.name == "Ob":
             prob += t[pb.all_tasks.index(task)] <= aircraft.m_d
+
     """
     # --------CONTRAINTE DE DEBUT----------
     prob += t[0] == 0
@@ -105,19 +106,30 @@ def solve_model_pulp(pb):
     print("Statut:", pulp.LpStatus[prob.status])
 
 
+# ######## TEST RECUP FLEET FROM X et T ########
+
+
+def compil_optimal_fleet(x, t, pb):
+    #returnable_fleet =list()
+    #   for v in x: --> matrix (task, task)
+        #   vehicle = Vehicle(TypeTemp)
+        #   temp_task_of_v = list()
+        #   for  i in range(pb.all_task):
+        #       for j in range pb.all_task):
+        #           if x[v, i, j]==1:
+                        # v fait i et j !
+        #               t_i = t[i]
+        #               task_ = pb.all_task[i] #####
+    #                   pb.all_task[i].t_i = t_i
+        #               temp_task_for_v.append(task_)
+        #       v_type = [vt for vt in pb.vehicle_types if task_.can_be_done_by[0]=vt.name][0]
+        #       vehicle.type = v_type
+        #   assert prob.objective == len(returnable_fleet)
+    #   return returnable fleet
+
+
+
 """
-    
-
-    
-
-
-
-
-    
-
-    
-
-    
     '''
     # Contraintes de couverture
     for i in range(pb.nb_vols):
