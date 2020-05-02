@@ -73,7 +73,7 @@ def solve_model_pulp(pb):
          #   prob += t[pb.all_tasks.index(task)] >= aircraft.m_a
         #elif task.type.name == "Ob":
          #   prob += t[pb.all_tasks.index(task)] <= aircraft.m_d
-    """
+
     # --------CONTRAINTE DE DEBUT----------
     prob += t[0] == 0
 
@@ -100,10 +100,12 @@ def solve_model_pulp(pb):
 
 
     # L'activité i doit commencer entre sa date de début minimal et sa date de début maximale
-    for i, task_i in enumerate(pb.all_tasks):
+    for i in range(1,len(pb.all_tasks)-1):
+        task_i = pb.all_tasks[i]
         prob += task_i.e_i <= t[i]
+        #print(task_i.type.name,"déb", task_i.e_i, " fin", task_i.l_i)
         prob += t[i] <= task_i.l_i
-
+    """
     '''#Redondant et faux dans le modèle recopié (brunal you had one fking job)
     # On commence par le début et on termine par la fin
     for i in pb.all_tasks:
