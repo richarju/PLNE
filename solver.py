@@ -56,20 +56,24 @@ def solve_model_pulp(pb):
         prob += pulp.lpSum(x[v,i,j]for v in range(n_vehicles) for i in range(n_task-1)) == 1
         #Les tâches ne peuvent être effectuées que par les bons véhicules
         for v in range(n_vehicles):
-            prob += pulp.lpSum(x[v,i,j]for i in range(n_task-1)) <= pb.all_tasks[j].delta(pb.vehicles[v])
+            if pb.all_tasks[j].type.name not in pb.vehicles[v].type.can_do_names :
+                prob += pulp.lpSum(x[v,i,j]for i in range(n_task-1)) <= pb.all_tasks[j].delta(pb.vehicles[v])
 
     # --------CONTRAINTE PRECEDENCE----------
     for aircraft in pb.flights:
         for task in aircraft.task_to_do:
+            #print("Task current",task)
+            #print("tâches précédentres",task.type.previous_tasks_names)
             for prevTask in task.type.previous_tasks_names:
                 for t_todo in aircraft.task_to_do:
                     if prevTask == t_todo.type.name:
+                        #print("Numéro tâche à faire : ",t_todo,pb.all_tasks.index(t_todo))
                         prob += t[pb.all_tasks.index(task)] >= t[pb.all_tasks.index(t_todo)] + t_todo.d_i
-        if task.type.name == "Ib":
-            prob += t[pb.all_tasks.index(task)] >= aircraft.m_a
-        elif task.type.name == "Ob":
-            prob += t[pb.all_tasks.index(task)] <= aircraft.m_d
-
+        #if task.type.name == "Ib":
+         #   prob += t[pb.all_tasks.index(task)] >= aircraft.m_a
+        #elif task.type.name == "Ob":
+         #   prob += t[pb.all_tasks.index(task)] <= aircraft.m_d
+    """
     # --------CONTRAINTE DE DEBUT----------
     prob += t[0] == 0
 
@@ -107,8 +111,8 @@ def solve_model_pulp(pb):
             prob += x[v, i, pb.all_tasks[0]] == x[v, pb.all_tasks[len(pb.all_tasks)], i]
             prob += x[v, i, pb.all_tasks[0]] == 0
             '''
-
-    prob.solve(pulp.GLPK_CMD(msg=1))
+    """
+    prob.solve()
     print("Statut:", pulp.LpStatus[prob.status])
 
 

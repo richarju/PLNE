@@ -23,6 +23,7 @@ class Airplane:
         names = [self.task_to_do[i] for i in range(0, len(self.task_to_do), 2)]
         durations = [int(self.task_to_do[i]) for i in range(1, len(self.task_to_do), 2)]
         for i, task_name in enumerate(names):
+            #print(task_name, task_types_list)
             type_ = [task_type for task_type in task_types_list if task_type.name == task_name][0]
             returnable_data.append(Task(type_, durations[i], self))
 

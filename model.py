@@ -34,7 +34,7 @@ class Problem:
         self.all_tasks = data.make_all_tasks(self.flights)
 
         # creation de la flotte de vehicules
-        self.vehicles = self.generate_vehicles()  # test: self.vehicles.append(obj.Vehicule(self.vehicle_types[0]))
+        self.vehicles = self.generate_vehicles2()  # test: self.vehicles.append(obj.Vehicule(self.vehicle_types[0]))
 
         self.decision_x = list()
 
@@ -56,6 +56,14 @@ class Problem:
         returnable_date = list()
         for type_ in self.vehicle_types:
             for _ in range(self.parkings.shape[0]):
+                returnable_date.append(obj.Vehicule(type_))
+        return returnable_date
+
+    def generate_vehicles2(self):
+        returnable_date = list()
+
+        for type_ in self.vehicle_types:
+            for _ in range(self.nb_vols):
                 returnable_date.append(obj.Vehicule(type_))
         return returnable_date
 
