@@ -7,13 +7,13 @@ def display_planning_per_vehicle(pb):
     :param pb: problem solved
     :return: a matplotlib display that shows the planning for each vehicle
     """
-    scale_n = len(pb.fleet)
+    scale_n = len(pb.vehicles)
     color_list = ['red', 'blue', 'green', 'black', 'magenta', 'darkred', 'darkblue','orange', 'yellow', 'cyan']
     fig, ax = plt.subplots()
     positions = list()
     label = list()
     parkings_used = list()
-    solution_wo_nvr = [vehicle for vehicle in pb.fleet if vehicle.type.name != 'NVR']
+    solution_wo_nvr = [vehicle for vehicle in pb.vehicles if vehicle.type.name != 'NVR']
     max_y = len(solution_wo_nvr) + 0.01 * scale_n
     for i, vehicle in enumerate(solution_wo_nvr):
         positions.append(i)

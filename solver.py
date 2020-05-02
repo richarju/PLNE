@@ -1,7 +1,7 @@
 import model as pbs
 import pulp
-
-
+import display_master as display
+import objects
 def solve_model_pulp(pb):
 
     # --------TOOLS----------ok
@@ -114,22 +114,31 @@ def solve_model_pulp(pb):
             prob += x[v, i, pb.all_tasks[0]] == 0
             '''
     """
-    prob.solve()
+    prob.solve(pulp.GLPK_CMD(msg=1))
     print("Statut:", pulp.LpStatus[prob.status])
-
-
-
-    
-
-    
-
-
-
-
-    
-
-    
-
+    print(x)
+    print(t)
+    print(x[0,0,0].varValue)
+    #display.display_planning_per_vehicle(pb)
+    """
+    def compil_optimal_fleet(x, t, pb):
+        returnable_fleet =list()
+        for v in x: #--> matrix (task, task)
+            vehicle = objects.Vehicle("TypeTemp")
+            temp_task_of_v = list()
+            for  i in range(pb.all_task):
+                for j in range pb.all_task):
+                    if x[v, i, j]==1:
+                        # v fait i et j !
+                        t_i = t[i]
+                        task_ = pb.all_task[i] #####
+                        pb.all_task[i].t_i = t_i
+                        temp_task_for_v.append(task_)
+                v_type = [vt for vt in pb.vehicle_types if task_.can_be_done_by[0]=vt.name][0]
+                vehicle.type = v_type
+            assert prob.objective == len(returnable_fleet)
+        return returnable_fleet
+    """
     """
 
     #####
