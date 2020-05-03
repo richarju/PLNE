@@ -95,10 +95,11 @@ def solve_model_pulp(pb):
     # Autre version. Attention : Les distances base-parking sont stockées dans une matrice différente de celle des distance inter-parking !
     #print(pb.parkings)
     #print(pb.bases_vehicles)
-    for i in range(1,n_task - 1):
+    for i in range(1, n_task - 1):
         for vt in pb.vehicle_types:
 
-            if pb.all_tasks[i].type.can_be_done_by == vt : prob += t[n_task-1] >= t[i] + pb.bases_vehicles[pb.all_tasks[i].airplane.parking-1, vt.base] / vt.speed
+            if pb.all_tasks[i].type.can_be_done_by == vt:
+                prob += t[n_task-1] >= t[i] + pb.bases_vehicles[pb.all_tasks[i].airplane.parking-1, vt.base] / vt.speed
 
 
     # L'activité i doit commencer entre sa date de début minimal et sa date de début maximale

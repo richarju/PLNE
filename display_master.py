@@ -22,7 +22,7 @@ def display_planning_per_vehicle(pb):
             beg = task.t_i
             end = task.t_i + task.d_i
             parkings_used.append(task.airplane.parking)
-            ax.plot([beg, end], [i, i], linewidth=2, color=color_list[task.airplane.parking-1],
+            ax.plot([beg, end], [i, i+0.3], linewidth=2, color=color_list[task.airplane.parking-1],
                     label='parking '+str(task.airplane.parking))
             ax.text(beg + 2.5, i + 0.01 * scale_n, '{} - {}'.format(task.type.name, task.airplane.fl_nbr),
                     ha="center", va="center", size=7, weight="bold")
