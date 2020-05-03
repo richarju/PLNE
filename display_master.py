@@ -5,11 +5,12 @@ import objects
 
 def display_planning_per_vehicle(list_of_v, pb):
     """
+    :param list_of_v: truc
     :param pb: problem solved
     :return: a matplotlib display that shows the planning for each vehicle
     """
     scale_n = len(list_of_v)
-    color_list = ['red', 'blue', 'green', 'black', 'magenta', 'darkred', 'darkblue','orange', 'yellow', 'cyan']
+    color_list = ['red', 'blue', 'green', 'black', 'magenta', 'darkred', 'darkblue', 'orange', 'yellow', 'cyan']
     fig, ax = plt.subplots()
     positions = list()
     label = list()
@@ -20,12 +21,10 @@ def display_planning_per_vehicle(list_of_v, pb):
         positions.append(i)
         label.append('APV' + str(i+1) + ' ({})'.format(vehicle.type.name))
         for task in vehicle.tasks:
-            if type(task.airplane) is not objects.Airplane:
-                print('############################', task)
             beg = task.t_i
             end = task.t_i + task.d_i
             parkings_used.append(task.airplane.parking)
-            ax.plot([beg, end], [i, i+0.3], linewidth=2, color=color_list[task.airplane.parking-1],
+            ax.plot([beg, end], [i, i], linewidth=2, color=color_list[task.airplane.parking-1],
                     label='parking '+str(task.airplane.parking))
             ax.text(beg + 2.5, i + 0.01 * scale_n, '{} - {}'.format(task.type.name, task.airplane.fl_nbr),
                     ha="center", va="center", size=7, weight="bold")
