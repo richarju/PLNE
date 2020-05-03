@@ -106,7 +106,6 @@ def solve_model_pulp(pb):
     for i in range(1, len(pb.all_tasks)-1):
         task_i = pb.all_tasks[i]
         prob += task_i.e_i <= t[i]
-        #print(task_i.type.name,"déb", task_i.e_i, " fin", task_i.l_i)
         prob += t[i] <= task_i.l_i
     """
     '''#Redondant et faux dans le modèle recopié (brunal you had one fking job)
