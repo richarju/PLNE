@@ -43,8 +43,8 @@ def solve_model_pulp(pb):
                 p_i = tasks[i].airplane.parking-1
                 p_j = tasks[j].airplane.parking-1
 
-                prob += t[j] >= t[i] + pb.parkings[p_i][p_j] / pb.vehicles[v].type.speed - m * (1 - x[v, i, j])
-
+                prob += t[j] >= t[i] + tasks[i].d_i + (pb.parkings[p_i][p_j] / pb.vehicles[v].type.speed) - m * (1 - x[v, i, j])
+# + tasks[i].d_i
     #Contrainte de couverture
     ## MAUVAIS
     #for vt in pb.vehicle_types:
@@ -55,11 +55,11 @@ def solve_model_pulp(pb):
     #BON
     #Toutes les tâches sont effectuées une et une seule fois
     for j in range(1, n_task-1):
-        prob += pulp.lpSum(x[v,i,j]for v in range(n_vehicles) for i in range(n_task-1)) == 1
+        prob += pulp.lpSum(x[v, i, j]for v in range(n_vehicles) for i in range(n_task-1)) == 1
         #Les tâches ne peuvent être effectuées que par les bons véhicules
         for v in range(n_vehicles):
-            if pb.all_tasks[j].type.name not in pb.vehicles[v].type.can_do_names :
-                prob += pulp.lpSum(x[v,i,j]for i in range(n_task-1)) <= pb.all_tasks[j].delta(pb.vehicles[v])
+            if pb.all_tasks[j].type.name not in pb.vehicles[v].type.can_do_names:
+                prob += pulp.lpSum(x[v, i, j]for i in range(n_task-1)) <= pb.all_tasks[j].delta(pb.vehicles[v])
 
     # --------CONTRAINTE PRECEDENCE----------
     for aircraft in pb.flights:
@@ -99,11 +99,11 @@ def solve_model_pulp(pb):
         for vt in pb.vehicle_types:
 
             if pb.all_tasks[i].type.can_be_done_by == vt:
-                prob += t[n_task-1] >= t[i] + pb.bases_vehicles[pb.all_tasks[i].airplane.parking-1, vt.base] / vt.speed
+                prob += t[n_task-1] >= t[i] + pb.all_tasks[i].d_i + pb.bases_vehicles[pb.all_tasks[i].airplane.parking-1, vt.base] / vt.speed
 
 
     # L'activité i doit commencer entre sa date de début minimal et sa date de début maximale
-    for i in range(1,len(pb.all_tasks)-1):
+    for i in range(1, len(pb.all_tasks)-1):
         task_i = pb.all_tasks[i]
         prob += task_i.e_i <= t[i]
         #print(task_i.type.name,"déb", task_i.e_i, " fin", task_i.l_i)

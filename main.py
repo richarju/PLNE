@@ -6,17 +6,16 @@ import solver
 
 
 if __name__ == "__main__":
-    if len(sys.argv) != 2:
-        print("Le programme prend un seul argument")
-    else:
-        pb = model.Problem(sys.argv[1])
-        print(pb, '\n')
-        print("------EXECUTION PLNE VIA PULP.GLPK------")
+    if len(sys.argv) > 0:
+        pb = model.Problem("vols_3.txt")
         x, t = solver.solve_model_pulp(pb)
-        print('\n')
-        print("Valeur de la Fonction Objectif :", len([v for v in pb.vehicles if v.type.name != "NVR"]))
-        print("Variables de décisions récupérables par \"pb.decision_x\" ou \"pb.decision_t\"")
-        pb.fleet_from_plne(x, t)
-        print("---------AFFICHAGE DU PLANNING----------")
-        disp.display_planning_per_vehicle(pb)
+        pb.make_array_after_plne(x, t)
 
+        print(pb.decision_t)
+        print()
+
+        for v in range(len(pb.vehicles)):
+            print(pb.vehicles[v], '\n')
+            print(pb.decision_x[v])
+        pb.fleet_from_plne(x, t)
+        disp.display_planning_per_vehicle(pb.vehicles, pb)

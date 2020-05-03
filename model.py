@@ -115,9 +115,9 @@ class Problem:
             if len(task_index_done) == 0:
                 tid_final = list()
             elif len(task_index_done) == 1:
-                tid_final = [task_index_done[0][0]]
+                tid_final = [task_index_done[0][1]]
             else:
-                tid_final = [i[0] for i in task_index_done[:-1]] + [task_index_done[-1][1]]
+                tid_final = [i[1] for i in task_index_done[:-1]] + [task_index_done[-1][1]]
             vehicule.index_tasks = tid_final
 
     def attribution_task_to_vehicle(self):
