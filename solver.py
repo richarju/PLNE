@@ -2,6 +2,8 @@ import model as pbs
 import pulp
 import display_master as display
 import objects
+
+
 def solve_model_pulp(pb):
 
     # --------TOOLS----------ok
@@ -116,10 +118,11 @@ def solve_model_pulp(pb):
     """
     prob.solve(pulp.GLPK_CMD(msg=1))
     print("Statut:", pulp.LpStatus[prob.status])
-    print(x)
-    print(t)
-    print(x[0,0,0].varValue)
-    #display.display_planning_per_vehicle(pb)
+    return x, t
+    # print(x)
+    # print(t)
+    # print(x[0,0,0].varValue)
+    # display.display_planning_per_vehicle(pb)
     """
     def compil_optimal_fleet(x, t, pb):
         returnable_fleet =list()

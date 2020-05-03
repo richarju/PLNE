@@ -1,6 +1,8 @@
 # import sys
+import display_master as disp
 import model
 import solver
+
 
 
 if __name__ == "__main__":
@@ -8,7 +10,7 @@ if __name__ == "__main__":
         # print("Le programme prend un seul argument")
     # else:
     pb = model.Problem("vols_2.txt")
-    # print(pb)
-    solver.solve_model_pulp(pb)
-    # this is a test for git
+    x, t = solver.solve_model_pulp(pb)
+    pb.fleet_from_plne(x, t)
+    disp.display_planning_per_vehicle(pb)
 

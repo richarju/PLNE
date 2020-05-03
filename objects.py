@@ -97,6 +97,8 @@ class Vehicule:
     def __init__(self, type_):
         self.type = type_  # vehicle type object expected
         self.tasks = ["Beginning", "Ending"]  # other tasks will be added through the process
+        self.matrix_x = None  # to be used with plne afterward
+        self.index_tasks = list()  # to be used with plne afterward
 
     def __repr__(self):
         return "--VEHICLE {}-- tasks: {}\n".format(self.type, self.tasks)

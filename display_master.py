@@ -19,6 +19,7 @@ def display_planning_per_vehicle(pb):
         positions.append(i)
         label.append('APV' + str(i+1) + ' ({})'.format(vehicle.type.name))
         for task in vehicle.tasks:
+            print(task)
             beg = task.t_i
             end = task.t_i + task.d_i
             parkings_used.append(task.airplane.parking)
