@@ -2,7 +2,6 @@ import import_data as data
 import objects as obj
 import numpy as np
 
-
 class Problem:
     """
     instance totale du probleme reprenant l'ensemble des odonnées de import_data.py
