@@ -11,4 +11,4 @@ if __name__ == "__main__":
         x, t = solver.solve_model_pulp(pb)
         pb.make_array_after_plne(x, t)
         pb.fleet_from_plne(x, t)
-        disp.display_planning_per_vehicle(pb.vehicles, pb)
+        disp.display_planning_per_vehicle(pb)
