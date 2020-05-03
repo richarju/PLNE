@@ -26,7 +26,8 @@ def make_task_types():
     rule_file = open("data/activites_vehicules_1.txt")
     data = rule_file.readlines()
     returnable_data = [objects.TaskType("TypeBegin", []), objects.TaskType("TypeEnding", ["In", "Db", "Ul", "Lv", "Ct", "Cl", "Fl", "Bd", "Ld", "Pw", "Pb", "Ob"])]
-    for line in data[:12]:
+    for line in data[1:13]:
+        #print(line)
         s_line = line.split()
         returnable_data.append(objects.TaskType(s_line[0], s_line[1:]))
     return returnable_data

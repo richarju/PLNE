@@ -1,5 +1,7 @@
 import model as pbs
 import pulp
+import display_master as display
+import objects
 
 
 def solve_model_pulp(pb):
@@ -56,86 +58,92 @@ def solve_model_pulp(pb):
         prob += pulp.lpSum(x[v,i,j]for v in range(n_vehicles) for i in range(n_task-1)) == 1
         #Les tâches ne peuvent être effectuées que par les bons véhicules
         for v in range(n_vehicles):
-            prob += pulp.lpSum(x[v,i,j]for i in range(n_task-1)) <= pb.all_tasks[j].delta(pb.vehicles[v])
+            if pb.all_tasks[j].type.name not in pb.vehicles[v].type.can_do_names :
+                prob += pulp.lpSum(x[v,i,j]for i in range(n_task-1)) <= pb.all_tasks[j].delta(pb.vehicles[v])
 
     # --------CONTRAINTE PRECEDENCE----------
     for aircraft in pb.flights:
         for task in aircraft.task_to_do:
+            #print("Task current",task)
+            #print("tâches précédentres",task.type.previous_tasks_names)
             for prevTask in task.type.previous_tasks_names:
                 for t_todo in aircraft.task_to_do:
                     if prevTask == t_todo.type.name:
+                        #print("Numéro tâche à faire : ",t_todo,pb.all_tasks.index(t_todo))
                         prob += t[pb.all_tasks.index(task)] >= t[pb.all_tasks.index(t_todo)] + t_todo.d_i
-        if task.type.name == "Ib":
-            prob += t[pb.all_tasks.index(task)] >= aircraft.m_a
-        elif task.type.name == "Ob":
-            prob += t[pb.all_tasks.index(task)] <= aircraft.m_d
-    """
+        #if task.type.name == "Ib":
+         #   prob += t[pb.all_tasks.index(task)] >= aircraft.m_a
+        #elif task.type.name == "Ob":
+         #   prob += t[pb.all_tasks.index(task)] <= aircraft.m_d
+
     # --------CONTRAINTE DE DEBUT----------
     prob += t[0] == 0
 
     # --------CONTRAINTE DE DEBUT ET FIN PAR VEHICULE----------
-    for i in range(n_task-1):
+    for i in range(n_task):
         for v in range(n_vehicles):
-            prob += x[v, i, 0] == x[v, n_task-2, i]
+            prob += x[v, i, 0] == x[v, n_task-1, i]
             prob += x[v, i, 0] == 0
-    
+
     # Les véhicules rentrent à la base après avoir tout terminé
+    #première version ça bug
+    '''
     for i, task_i in enumerate([pb.all_tasks[i] for i in range(1, n_task - 1)]):
         v_type = [v_t for v_t in pb.vehicle_types if task_i.type.can_be_done_by == v_t][0]
         prob += t[i] + (pb.bases_vehicles[v_type.base-1] / v_type.speed) + task_i.d_i <= t[n_task-2],
     '''
-    # Autre version
-    '''for i in range(len(pb.all_tasks) - 1):
+    # Autre version. Attention : Les distances base-parking sont stockées dans une matrice différente de celle des distance inter-parking !
+    #print(pb.parkings)
+    #print(pb.bases_vehicles)
+    for i in range(1,n_task - 1):
         for vt in pb.vehicle_types:
-            prob += t[-1] >= t[i] + pb.parkings[i, -1] / vt.speed'''
-    '''
-    # L'activité i doit commencer entre sa date de début minimal et sa date de ébut macimale
-    for i, task_i in enumerate(pb.all_tasks):
-        prob += task_i.e_i <= t[i],
-        prob += t[i] <= task_i.l_i,
 
+            if pb.all_tasks[i].type.can_be_done_by == vt : prob += t[n_task-1] >= t[i] + pb.bases_vehicles[pb.all_tasks[i].airplane.parking-1, vt.base] / vt.speed
+
+
+    # L'activité i doit commencer entre sa date de début minimal et sa date de début maximale
+    for i in range(1,len(pb.all_tasks)-1):
+        task_i = pb.all_tasks[i]
+        prob += task_i.e_i <= t[i]
+        #print(task_i.type.name,"déb", task_i.e_i, " fin", task_i.l_i)
+        prob += t[i] <= task_i.l_i
+    """
+    '''#Redondant et faux dans le modèle recopié (brunal you had one fking job)
     # On commence par le début et on termine par la fin
     for i in pb.all_tasks:
         for v in pb.vehicles:
             prob += x[v, i, pb.all_tasks[0]] == x[v, pb.all_tasks[len(pb.all_tasks)], i]
             prob += x[v, i, pb.all_tasks[0]] == 0
-    '''
+            '''
     """
     prob.solve(pulp.GLPK_CMD(msg=1))
     print("Statut:", pulp.LpStatus[prob.status])
+    return x, t
+    # print(x)
+    # print(t)
+    # print(x[0,0,0].varValue)
+    # display.display_planning_per_vehicle(pb)
+    """
+    def compil_optimal_fleet(x, t, pb):
+        returnable_fleet =list()
+        for v in x: #--> matrix (task, task)
+            vehicle = objects.Vehicle("TypeTemp")
+            temp_task_of_v = list()
+            for  i in range(pb.all_task):
+                for j in range pb.all_task):
+                    if x[v, i, j]==1:
+                        # v fait i et j !
+                        t_i = t[i]
+                        task_ = pb.all_task[i] #####
+                        pb.all_task[i].t_i = t_i
+                        temp_task_for_v.append(task_)
+                v_type = [vt for vt in pb.vehicle_types if task_.can_be_done_by[0]=vt.name][0]
+                vehicle.type = v_type
+            assert prob.objective == len(returnable_fleet)
+        return returnable_fleet
+    """
+    """
 
-
-"""
-    
-
-    
-
-
-
-
-    
-
-    
-
-    
-    '''
-    # Contraintes de couverture
-    for i in range(pb.nb_vols):
-        prob += pulp.lpSum([x[i, k] for k in range(pb.nb_flottes)]) == 1, "contrainte de couverture {}".format(i)
-
-    # Contraintes de flot
-    for k in range(pb.nb_flottes):
-        for i, v in enumerate(pb.vertices):
-            prob += pulp.lpSum([x[(j, k)] for j in v.arcs_vol_in]) \
-                    + y[(v.arc_sol_in, k)] \
-                    == pulp.lpSum([x[j, k] for j in v.arcs_vol_out]) \
-                    + y[(v.arc_sol_out, k)], "contrainte de flot {} {}".format(k, i)
-
-    # Contraintes de ressource
-    for k in range(pb.nb_flottes):
-        prob += pulp.lpSum([y[g, k] for g in pb.last_arcs_sol]) <= pb.nb_avions_flottes[
-            k], "contrainte de ressource {}".format(k)
-'''
     #####
     # Resolution du modele par PLNE (appel au solveur GLPK)
     #####

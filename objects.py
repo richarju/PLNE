@@ -23,6 +23,7 @@ class Airplane:
         names = [self.task_to_do[i] for i in range(0, len(self.task_to_do), 2)]
         durations = [int(self.task_to_do[i]) for i in range(1, len(self.task_to_do), 2)]
         for i, task_name in enumerate(names):
+            #print(task_name, task_types_list)
             type_ = [task_type for task_type in task_types_list if task_type.name == task_name][0]
             returnable_data.append(Task(type_, durations[i], self))
 
@@ -96,6 +97,8 @@ class Vehicule:
     def __init__(self, type_):
         self.type = type_  # vehicle type object expected
         self.tasks = ["Beginning", "Ending"]  # other tasks will be added through the process
+        self.matrix_x = None  # to be used with plne afterward
+        self.index_tasks = list()  # to be used with plne afterward
 
     def __repr__(self):
         return "--VEHICLE {}-- tasks: {}\n".format(self.type, self.tasks)
