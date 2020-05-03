@@ -41,7 +41,7 @@ class Problem:
 
     def __repr__(self):
         return "---Problem Object--- \nnbr of flights: {}  \nnbr of tasks: {}  " \
-               "\nvehicles used: {}".format(len(self.flights), len(self.all_tasks), self.vehicles)
+               "\nvehicles used: {}".format(len(self.flights), len(self.all_tasks), len(self.vehicles))
 
     def set_up_what_vehicle_types_can_do_a_task_types(self):
         """
@@ -126,7 +126,6 @@ class Problem:
         for index_v, vehicle in enumerate(self.vehicles):
             vehicle.tasks = list()
             if len(vehicle.index_tasks) != 0:
-                print(vehicle.index_tasks)
                 for index_of_task in vehicle.index_tasks:
                     self.all_tasks[index_of_task].t_i = self.decision_t[index_of_task]
                     vehicle.tasks.append(self.all_tasks[index_of_task])
