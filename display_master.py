@@ -13,13 +13,12 @@ def display_planning_per_vehicle(pb):
     positions = list()
     label = list()
     parkings_used = list()
-    solution_wo_nvr = [vehicle for vehicle in pb.vehicles] # if vehicle.type.name != 'NVR']
+    solution_wo_nvr = [vehicle for vehicle in pb.vehicles if vehicle.type.name != 'NVR']
     max_y = len(solution_wo_nvr) + 0.01 * scale_n
     for i, vehicle in enumerate(solution_wo_nvr):
         positions.append(i)
         label.append('APV' + str(i+1) + ' ({})'.format(vehicle.type.name))
         for task in vehicle.tasks:
-            print(task)
             beg = task.t_i
             end = task.t_i + task.d_i
             parkings_used.append(task.airplane.parking)
