@@ -45,9 +45,15 @@ def make_flight_list(flight_file_name, task_types):
 
 
 def make_all_tasks(list_of_flights):
+    t_beg = objects.Task(objects.TaskType("TypeBegin", []), 0, None)
+    t_end = objects.Task(objects.TaskType("TypeEnding", []), 0, None)
+    apl_base = objects.Airplane('BASE', 0, max([ap.m_d for ap in list_of_flights]), 0, [t_beg, t_end])
+    t_beg.airplane = apl_base
+    t_end.airplane = apl_base
+    apl_base.task_to_do = [t_beg, t_end]
     returnable_data = list()
-    returnable_data += [objects.Task(objects.TaskType("TypeBegin", []), 0, None)]
+    returnable_data += [t_beg, t_end]
     for flight in list_of_flights:
         returnable_data += flight.task_to_do
-    returnable_data += [objects.Task(objects.TaskType("TypeEnding", []), 0, None)]
+    returnable_data += []
     return returnable_data
