@@ -1,6 +1,5 @@
 import matplotlib.pyplot as plt
 import matplotlib.lines as line
-import objects
 
 
 def display_planning_per_vehicle(pb):
@@ -31,7 +30,7 @@ def display_planning_per_vehicle(pb):
                 end = task.t_i + task.d_i
                 parkings_used.append(task.airplane.parking)
                 if task.type.name not in ['Db', 'Bd']:
-                    ax.plot([beg, end], [i, i], linewidth=2, color=color_list[task.airplane.parking-1],
+                    ax.plot([beg, end], [i, i+0.4], linewidth=2, color=color_list[task.airplane.parking-1],
                             label='parking '+str(task.airplane.parking))
                 else:
                     ax.plot([beg, end], [i, i], linewidth=2, color='grey')

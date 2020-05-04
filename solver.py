@@ -7,7 +7,7 @@ import objects
 def solve_model_pulp(pb):
 
     # --------TOOLS----------ok
-    m = 10000
+    m = 1000000000000
     # On definit le probleme a minimiser
     n_task = len(pb.all_tasks)
     n_vehicles = len(pb.vehicles)

@@ -4,7 +4,6 @@ import model
 import solver
 
 
-
 if __name__ == "__main__":
     if len(sys.argv) > 0:
         pb = model.Problem("vols_2.txt")
