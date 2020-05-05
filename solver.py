@@ -179,9 +179,8 @@ def solve_model_pulp(pb):
     """
 
     # pulp.LpSolverDefault.msg = 1 #pour le solveur de base ça affiche les infos
-    prob.writeLP('test.lp', mip=1)
-    prob.solve()
-    print(pb.all_tasks)
+    # prob.writeLP('test.lp', mip=1)
+    prob.solve(pulp.GLPK_CMD(msg=1, options=['--tmlim', '240']))
     print("Statut:", pulp.LpStatus[prob.status])
 
     for v in range(n_vehicles):

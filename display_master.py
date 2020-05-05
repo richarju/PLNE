@@ -34,7 +34,7 @@ def display_planning_per_vehicle(pb):
                 end = task.t_i + task.d_i
                 parkings_used.append(task.airplane.parking)
                 if task.type.name not in ['Db', 'Bd']:
-                    ax.plot([beg, end], [i, i+0.4], linewidth=2, color=color_list[task.airplane.parking-1],
+                    ax.plot([beg, end], [i, i], linewidth=2, color=color_list[task.airplane.parking-1],
                             label='parking '+str(task.airplane.parking))
                 else:
                     ax.plot([beg, end], [i, i], linewidth=2, color='grey')
@@ -47,7 +47,7 @@ def display_planning_per_vehicle(pb):
         ax.plot([flight.m_a-0.5, flight.m_a-0.5], [-0.5, max_y + pb.flights.index(flight) % 2],
                 linewidth=0.8, color=color_list[flight.parking-1])
         ax.text(flight.m_a, max_y + pb.flights.index(flight) % 2, 'In Block {}'.format(flight.fl_nbr), size=7, ha="center")
-        ax.plot([flight.m_d, flight.m_d], [-0.5, max_y + pb.flights.index(flight) % 2],
+        ax.plot([flight.m_d+0.5, flight.m_d+0.5], [-0.5, max_y + pb.flights.index(flight) % 2],
                 linewidth=0.8, color=color_list[flight.parking-1])
         ax.text(flight.m_d, max_y + pb.flights.index(flight) % 2, 'Out Block {}'.format(flight.fl_nbr), size=7, ha="center")
     ax.grid(axis='y', color='grey')

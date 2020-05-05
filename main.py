@@ -6,7 +6,7 @@ import solver
 
 if __name__ == "__main__":
     if len(sys.argv) > 0:
-        pb = model.Problem("vols_2.txt")
+        pb = model.Problem("vols_3.txt")
         x, t = solver.solve_model_pulp(pb)
         pb.make_array_after_plne(x, t)
         pb.fleet_from_plne(x, t)
