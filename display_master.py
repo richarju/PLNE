@@ -4,8 +4,10 @@ import matplotlib.lines as line
 
 def display_planning_per_vehicle(pb):
     """
-    :param pb: problem solved
-    :return: a matplotlib display that shows the planning for each vehicle
+    Executé après la résolution du problème (quelque soit la méthode), affiche le prgramme de vol
+    sous forme compréhensible et graphique
+    :param pb: instance du modèle
+    :return: matplotlib.figure()
     """
     vehcile_list = [v for v in pb.vehicles if len(v.tasks) > 1]
     pb.vehicles = vehcile_list
@@ -28,7 +30,6 @@ def display_planning_per_vehicle(pb):
         else:
             label.append('NO VEHICLE')
         for task in vehicle.tasks:
-            # print('################', task)
             if task.type.name not in ['In', 'Ob', 'TypeBegin', 'TypeEnding']:
                 beg = task.t_i
                 end = task.t_i + task.d_i

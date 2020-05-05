@@ -5,37 +5,44 @@ import numpy as np
 
 class Problem:
     """
-    instance totale du probleme reprenant l'ensemble des odonnées de import_data.py
-    converties en objets de objects.py parfaitements instanciés pour une résolution algorithmique du problème
+    crée une istance du problème avec les bons objets
     """
 
     def __init__(self, flight_filename):
-
+        """
+        :param flight_filename: chaque instance dépend du programme de vol à traiter
+        """
         # creation des distances entre parkings
         self.parkings = data.make_parking_matrix()
+
         # creations des distances des bases aux parkings
         self.bases_vehicles = data.make_base_matrix()
 
         # creation des types de tasks à faire
         self.task_types = data.make_task_types()
+
         # creation des types de vehicules disponibles sur la plateforme
         self.vehicle_types = data.make_vehicle_types()
+
         # Ajout de la passerelle (NO VEHICLE REQUIRED --> NVR) pour pouvoir attribuer chaque tache a un vehicule
         self.vehicle_types.append(obj.VehiculeType('NVR', 100000000000, ['In', 'Ob', 'Bd', 'Db'], 1))
+
         # Attribution des types de véhicules aux types de taches
         self.set_up_what_vehicle_types_can_do_a_task_types()
 
         # creation du programme de vol
         self.flights = data.make_flight_list(flight_filename, self.task_types)
+
         # rassemblement de l'ensemble des tasks à faire
         self.nb_vols = len(self.flights)
-        # print(self.flights)
-        # print(self.flights[1].task_to_do)
+
+        # creation de la liste de taches à traiter
         self.all_tasks = data.make_all_tasks(self.flights)
 
         # creation de la flotte de vehicules
-        self.vehicles = self.generate_vehicles2()  # test: self.vehicles.append(obj.Vehicule(self.vehicle_types[0]))
+        self.vehicles = list()  # test: self.vehicles.append(obj.Vehicule(self.vehicle_types[0]))
 
+        # recuperation des variables de decision en PLNE
         self.decision_x = None
         self.decision_t = list()
 
@@ -54,6 +61,10 @@ class Problem:
             t_type.can_be_done_by = vehicle_type
 
     def generate_vehicles(self):
+        """
+        first attempt to create a fleet before solving with PLNE. not optimized
+        :return: list() contains Vehicles
+        """
         returnable_date = list()
         for type_ in self.vehicle_types:
             for _ in range(self.parkings.shape[0]):
@@ -61,15 +72,21 @@ class Problem:
         return returnable_date
 
     def generate_vehicles2(self):
+        """
+        second attempt to create a fleet before solving with PLNE. more optimized than version 1
+        :return:  list() contains Vehicles
+        """
         returnable_date = list()
-
         for type_ in self.vehicle_types:
             for _ in range(self.nb_vols):
                 returnable_date.append(obj.Vehicule(type_))
         return returnable_date
 
     def count_types_vehicle(self):
-        ''' returns a list of the number of vehicles of each type, in the order of self.vehicle_type '''
+        """
+        returns a list of the number of vehicles of each type, in the order of self.vehicle_type
+        :return: list
+        """
         return_list = []
         for t in self.vehicle_types:
             c = 0
@@ -105,6 +122,10 @@ class Problem:
             object_v.matrix_x = self.decision_x[index_v]
 
     def make_index_out_of_plne(self):
+        """
+        pour chaque vehicle, cette fonction récupère les indices des taches qu'il effectue
+        :return: nothing. donne à chaque véhicle les indices de ses taches
+        """
         n_task = len(self.all_tasks)
 
         for index_v, vehicule in enumerate(self.vehicles):
@@ -122,6 +143,10 @@ class Problem:
             vehicule.index_tasks = tid_final
 
     def attribution_task_to_vehicle(self):
+        """
+        récupère les objets taches à partir des indices récupérés dans la fonction précédente
+        :return: nothing. attribue à chaque vehicle ses objects taches
+        """
         returnable_data = list()
         for index_v, vehicle in enumerate(self.vehicles):
             vehicle.tasks = list()
@@ -135,42 +160,12 @@ class Problem:
         self.vehicles = returnable_data
 
     def fleet_from_plne(self, x, t):
+        """
+        fonction de traitement du résultat du plne
+        :param x: x from pulp
+        :param t: t from pulp
+        :return: l'ensemble des trois fonctions précédents
+        """
         self.make_array_after_plne(x, t)
         self.make_index_out_of_plne()
         self.attribution_task_to_vehicle()
-
-    '''
-        for index_v, vehicule in enumerate(self.vehicles):
-            tid_final = first_step(index_v)
-            print(tid_final)
-            if len(tid_final) > 0:
-                for ind, task in enumerate(self.all_tasks):
-                    if ind in tid_final:
-                        task.t_i = self.decision_t[ind]
-                        vehicule.tasks.append(task)
-        return self.vehicles
-    
-    def init_matrix_task_following(self):
-        """
-        :return: list of decision variables (matrix of x(i,j) for all vehicles in self.vehicles)
-        """
-        for i in range(len(self.vehicles)):
-            temp_shape = len(self.all_tasks)
-            self.decision_x.append(np.zeros((temp_shape, temp_shape)))  # initiated at 0
-
-    def add_vehicle(self, task):
-        """
-        adding a vehicle to the fleet also requires to create a new x(i,j) matrix which
-        will need tobe updated later
-        :param task: the task the vehicle was created for
-        :return: nothing
-        """
-        v_type = task.type.can_be_done_by
-        self.vehicles.append(obj.Vehicule(v_type))
-        temp_shape = len(self.all_tasks)
-        self.decision_x.append(np.zeros((temp_shape, temp_shape)))'''
-
-
-
-
-

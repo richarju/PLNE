@@ -10,6 +10,7 @@ def solve_model_pulp(pb):
     # On definit le probleme a minimiser
     n_task = len(pb.all_tasks)
     n_vehicles = len(pb.vehicles)
+    print(n_task-2)
     # print(pb.vehicles)
     print(pb.all_tasks[0], pb.all_tasks[n_task - 1])
 
@@ -63,7 +64,9 @@ def solve_model_pulp(pb):
         for j in range(1, n_task - 1):  # cas des débuts, a voir si c'est utile
             p_0 = pb.vehicles[v].type.base
             p_j = pb.all_tasks[j].airplane.parking - 1
-            prob += t[j] >= t[0] + (pb.bases_vehicles[p_j][p_0] / pb.vehicles[v].type.speed) - m * (1 - x[
+            print(p_0, p_j)
+
+            prob += t[j] >= t[0] + (pb.bases_vehicles[p_0][p_j] / pb.vehicles[v].type.speed) - m * (1 - x[
                 v, 0, j])  # , "TempBig_M_Debut v={} typeVehicule={} tache i={} typeTachei={} tache j={} typeTachej={}".format(
                 # v, pb.vehicles[v].type.name, 0, pb.all_tasks[0].type.name, j, pb.all_tasks[j].type.name)
 

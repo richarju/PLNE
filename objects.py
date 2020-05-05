@@ -81,7 +81,8 @@ class VehiculeType:
     def __init__(self, name, speed, can_do_names, base):
         self.name = name
         self.speed = speed
-        self.can_do_names = ["TypeBegin", "TypeEnding"] + can_do_names  # liste des noms d'activités que le véhicule peut faire, il peut faire d'office les activités début et fin
+        # liste des noms d'activités que le véhicule peut faire, il peut faire d'office les activités début et fin
+        self.can_do_names = ["TypeBegin", "TypeEnding"] + can_do_names
         self.base = base
 
     def __repr__(self):
