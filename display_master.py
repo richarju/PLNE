@@ -10,7 +10,7 @@ def display_planning_per_vehicle(pb):
     vehcile_list = [v for v in pb.vehicles if len(v.tasks) > 1]
     pb.vehicles = vehcile_list
     scale_n = len(pb.vehicles)
-    color_list = ['red', 'blue', 'green', 'black', 'magenta', 'darkred', 'darkblue', 'orange', 'yellow', 'cyan']
+    color_list = ['red', 'blue', 'green', 'orange', 'cyan', 'darkred', 'darkblue', 'black', 'yellow', 'magenta']
     fig, ax = plt.subplots()
     positions = list()
     label = list()
