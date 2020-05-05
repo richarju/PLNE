@@ -7,12 +7,15 @@ def display_planning_per_vehicle(pb):
     :param pb: problem solved
     :return: a matplotlib display that shows the planning for each vehicle
     """
+    vehcile_list = [v for v in pb.vehicles if len(v.tasks) > 1]
+    pb.vehicles = vehcile_list
     scale_n = len(pb.vehicles)
     color_list = ['red', 'blue', 'green', 'black', 'magenta', 'darkred', 'darkblue', 'orange', 'yellow', 'cyan']
     fig, ax = plt.subplots()
     positions = list()
     label = list()
     parkings_used = list()
+
     solution_wo_nvr = [vehicle for vehicle in pb.vehicles if vehicle.type.name != 'NVR']
     nvr_vehicles = [vehicle for vehicle in pb.vehicles if vehicle.type.name == 'NVR']
     n_n_nvr = len(solution_wo_nvr)
@@ -25,7 +28,8 @@ def display_planning_per_vehicle(pb):
         else:
             label.append('NO VEHICLE')
         for task in vehicle.tasks:
-            if task.type.name not in ['In', 'Ob']:
+            # print('################', task)
+            if task.type.name not in ['In', 'Ob', 'TypeBegin', 'TypeEnding']:
                 beg = task.t_i
                 end = task.t_i + task.d_i
                 parkings_used.append(task.airplane.parking)
@@ -35,7 +39,7 @@ def display_planning_per_vehicle(pb):
                 else:
                     ax.plot([beg, end], [i, i], linewidth=2, color='grey')
                 ax.text(beg + 2.5, i + 0.013 * scale_n, '{} - {}'.format(task.type.name, task.airplane.fl_nbr),
-                            ha="center", va="center", size=7, weight="bold")
+                        ha="center", va="center", size=7, weight="bold")
                 ax.text(beg, i - 0.013 * scale_n, '{}'.format(beg), ha="center", va="center", size=6)
                 ax.text(end, i - 0.013 * scale_n, '{}'.format(end), ha="center", va="center", size=6)
 

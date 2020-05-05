@@ -2,6 +2,7 @@ import import_data as data
 import objects as obj
 import numpy as np
 
+
 class Problem:
     """
     instance totale du probleme reprenant l'ensemble des odonnées de import_data.py
@@ -98,7 +99,7 @@ class Problem:
                         result_x[v, i, j] = 0
         self.decision_x = result_x
         for i in range(n_task):
-            self.decision_t.append(int(t_pulp[i].varValue))
+            self.decision_t.append(t_pulp[i].varValue)
 
         for index_v, object_v in enumerate(self.vehicles):
             object_v.matrix_x = self.decision_x[index_v]
