@@ -2,7 +2,7 @@ import pulp
 
 
 
-def solve_model_pulp(pb):
+def solve_model_pulp(pb, time_n=600):
     m = 1000
     n_task = len(pb.all_tasks)
     n_vehicles = len(pb.vehicles)
@@ -90,7 +90,8 @@ def solve_model_pulp(pb):
 
     # --------EXECUTION DU MODELE PAR PULP---------
     # prob.writeLP('test.lp', mip=1)
-    prob.solve(pulp.GLPK_CMD(msg=1, options=['--tmlim', '240']))
+    time_limit = str(time_n)
+    prob.solve(pulp.GLPK_CMD(msg=1, options=['--tmlim', time_limit]))
     print("Statut:", pulp.LpStatus[prob.status])
 
     return x, t
