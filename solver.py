@@ -8,7 +8,7 @@ def solve_model_pulp(pb):
     n_vehicles = len(pb.vehicles)
 
     # --------PULP PROBLEM----------
-    prob = pulp.LpProblem("Probleme Assistance en Escale", pulp.LpMinimize)
+    prob = pulp.LpProblem("Probleme_Assistance_en_Escale", pulp.LpMinimize)
 
     # --------VARIABLE DECISIONS----------
 
@@ -42,7 +42,7 @@ def solve_model_pulp(pb):
                 prob += t[j] >= t[i] + pb.all_tasks[i].d_i + (pb.parkings[p_i][p_j] /
                                                               float(pb.vehicles[v].type.speed)) - m * (1 - x[v, i, j])
         for j in range(1, n_task - 1):
-            p_0 = pb.vehicles[v].type.base
+            p_0 = pb.vehicles[v].type.base - 1
             p_j = pb.all_tasks[j].airplane.parking - 1
             prob += t[j] >= t[0] + (pb.bases_vehicles[p_0][p_j] / pb.vehicles[v].type.speed) - m * (1 - x[v, 0, j])
 
@@ -93,14 +93,4 @@ def solve_model_pulp(pb):
     prob.solve(pulp.GLPK_CMD(msg=1, options=['--tmlim', '240']))
     print("Statut:", pulp.LpStatus[prob.status])
 
-    for v in range(n_vehicles):
-        for i in range(n_task - 1):
-            for j in range(n_task - 1):
-                print(v, i, j, pb.vehicles[v].type.name, pb.all_tasks[i].type.name,
-                      pb.all_tasks[j].type.name) if 10 ** (-5) <= x[v, i, j].varValue <= 1 else '------'
     return x, t
-    # print(x)
-    # print(t)
-    # print(x[0,0,0].varValue)
-    # display.display_planning_per_vehicle(pb)
-
