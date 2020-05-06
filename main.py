@@ -1,10 +1,16 @@
-import sys
+# import sys
 import model
-import solver
+# import solver
+import heuristic
 import display_master as disp
 
 
 if __name__ == "__main__":
+    pb = model.Problem("vols_2.txt")
+    print(pb)
+    pb.vehicles = heuristic.heuristic_glouton(pb)
+    disp.display_planning_per_vehicle(pb)
+    """
     if len(sys.argv) == 2:
         try:
             pb = model.Problem(sys.argv[1])
@@ -61,6 +67,7 @@ if __name__ == "__main__":
 
     else:
         print('--Le solveur PLNE prend un seul argument de base (\"fichier_de_vol.txt\")--')
+    """
 
 
 

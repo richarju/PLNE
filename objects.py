@@ -58,6 +58,7 @@ class Task:
         self.l_i = self.airplane.m_d if airplane is not None else 0  # initialisation des l_i
         self.vehicle = None  # instance de Vehicle qui sera concerne par cette tache
         self.t_i = self.e_i  # on place le début de la tâche à l'arrivée de l'avion avant de faire le planning
+        self.previous = self.get_previous_tasks(self.airplane)
 
     def __repr__(self):
         return "--TASK {}-- duration:{} flight: {}\n".format(self.type, self.d_i, self.airplane)
@@ -72,6 +73,14 @@ class Task:
     def delta2(self, vehicle_type):
         """returns 1 if a a vehicle of type vehicleType can perform such task"""
         return 1 if self.type.name in vehicle_type.can_do_names else 0
+
+    def get_previous_tasks(self, flight):
+        returnable_data = list()
+        prv_names = self.type.previous_tasks_names
+        for task in flight.task_to_do:
+            if task.type.name in prv_names:
+                returnable_data.append(task)
+        return returnable_data
 
 
 class VehiculeType:
