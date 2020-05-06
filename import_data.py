@@ -65,6 +65,7 @@ def make_flight_list(flight_file_name, task_types):
         affect = objects.Airplane(s_line[0], int(s_line[2]), int(s_line[3]), int(s_line[1]), s_line[5:])
         affect.format_list_of_tasks(task_types)
         returnable_data.append(affect)
+        print(affect.task_to_do)
     return returnable_data
 
 

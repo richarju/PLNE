@@ -68,7 +68,7 @@ def create_new_vehicle(task_, vehicle_types):
     :param vehicle_types: list of all vehicle types
     :return: a new vehicle that is already set to go to the task in argument
     """
-    type_ = [v_type for v_type in vehicle_types if task_.type.can_be_done_by[0] == v_type][0]
+    type_ = task_.type.can_be_done_by
     vehicle = obj.Vehicule(type_)
     vehicle.t_dispo = task_.t_i + task_.d_i
     vehicle.tasks.append(task_)
