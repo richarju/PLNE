@@ -112,5 +112,5 @@ def display_planning_per_vehicle_heuristic(pb):
     ax.legend(handles, labels, prop={'size': 7}, loc=4)
     plt.xlabel('Time (min)')
     plt.ylabel('Airport Vehicles (APV)')
-    plt.title("Airport Vehicles Fleet Planning")
+    plt.title("Airport Vehicles Fleet Planning - Heuristic Solved")
     plt.show()
