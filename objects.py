@@ -37,15 +37,16 @@ class Airplane:
                      'Ct': ['Bd', 'Pb', 'Ob'],
                      'Lv': ['Pw', 'Pb', 'Ob'],
                      'Ul': ['Ld', 'Pb', 'Ob'],
+
                      'Db': ['Fl', 'Ct', 'Cl', 'Bd', 'Pb', 'Ob'],
-                     'In': ['Db', 'Ul', 'Lv', 'Ct', 'Cl', 'Fl', 'Bd', 'Ld', 'Pw', 'Pb', 'Ob'],
+                     'In': ['Db', 'Ul', 'Lv', 'Ob'],
                      'TypeBegin': [],
                      'TypeEnfding': []}
 
         for task in returnable_data:
-            next_names = next_dict[task.type.name]
-            next_tasks = [task_ for task_ in returnable_data if task_.type.name in next_names]
-            task.next = next_tasks
+            next_names_list = next_dict[task.type.name]
+            next_task = [task_ for task_ in returnable_data if task_.type.name in next_names_list]
+            task.next = next_task
         self.task_to_do = returnable_data
 
 
@@ -84,7 +85,7 @@ class Task:
         self.next = list()
 
     def __repr__(self):
-        return "--TASK {}-- duration:{} BEG {} flight: {}\n".format(self.type, self.d_i, self.t_i, self.airplane)
+        return "--{} for {}-- di={}, ti=({},{})\n".format(self.type.name, self.airplane.fl_nbr, self.d_i, self.e_i, self.l_i)
 
     def delta(self, vehicle):
         """

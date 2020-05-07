@@ -1,5 +1,4 @@
 import objects as obj
-import heuristic_2
 
 
 def make_time_for_task(flight):
@@ -63,7 +62,7 @@ def time_on_task(pb, task,vehicle):
         return time_to_start
 
 
-def create_new_vehicle(task_, vehicle_types):
+def create_new_vehicle(task_):
     """
     :param task_: task that leads to creating the new vehicle
     :param vehicle_types: list of all vehicle types
