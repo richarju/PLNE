@@ -191,7 +191,7 @@ class ProblemH:
         # creation des types de vehicules disponibles sur la plateforme
         self.vehicle_types = data.make_vehicle_types_h()
         # Ajout de la passerelle (NO VEHICLE REQUIRED --> NVR) pour pouvoir attribuer chaque tache a un vehicule
-        self.vehicle_types.append(obj.VehiculeType('NVR', 1, ['In', 'Ob', 'Bd', 'Db'], 1))
+        self.vehicle_types.append(obj.VehiculeType('NVR', 1000000000, ['In', 'Ob', 'Bd', 'Db'], 1))
         # Attribution des types de véhicules aux types de taches
         self.set_up_what_vehicle_types_can_do_a_task_types()
 

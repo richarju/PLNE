@@ -93,7 +93,7 @@ def heuristic_glouton(pb_):
     # step 2 - if fleet is empty, let's create a first vehicle for a first task
     if len(fleet) == 0:
         task_considered = all_tasks_to_do.pop(0)
-        new_vehicle = create_new_vehicle(task_considered, vehicle_types)
+        new_vehicle = create_new_vehicle(task_considered)
         fleet.append(new_vehicle)
 
     # step 3 - for each task, if one of the vehicles is available, he will do it
@@ -111,7 +111,7 @@ def heuristic_glouton(pb_):
 
     # step 5 - if no vehicle got it, let's create a new one
         if check is False:
-            new_vehicle = create_new_vehicle(task_considered, vehicle_types)
+            new_vehicle = create_new_vehicle(task_considered)
             fleet.append(new_vehicle)
 
     # step 5 bis (optional) calculate the time at which each vehicle of the fleet should leave and return its base

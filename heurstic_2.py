@@ -1,5 +1,6 @@
 import objects as obj
 import model
+import display_master as disp
 
 """
 IDEE GENERALE :
@@ -35,7 +36,6 @@ def make_ei(flight):
     for task_ in tasks:
         task_.e_i = max([t.e_i + t.d_i for t in task_.prev] + [init_time])
     flight.task_to_do = tasks
-    print([(t.type.name, t.e_i) for t in flight.task_to_do])
 
 
 def make_li(flight):
@@ -80,7 +80,7 @@ def is_available_for_task(pb_, task_, vehicle):
     return False
 
 
-def time_on_task(pb, task,vehicle):
+def time_on_task(pb, task, vehicle):
         last_task = vehicle.tasks[-1]
         time_to_move = pb.parkings[last_task.airplane.parking - 1, task.airplane.parking-1] / vehicle.type.speed
         time_to_start = vehicle.t_dispo + time_to_move
@@ -99,8 +99,115 @@ def create_new_vehicle(task_):
     vehicle.tasks.append(task_)
     return vehicle
 
-test = model.ProblemH('vols_2.txt')
-for fl in test.flights:
-    make_ei(fl)
-    make_li(fl)
 
+def decaler_ti(task_name, flight, offset, pos=True):
+    task = [task for task in flight.task_to_do if task_name == task.type.name][0]
+    try:
+        assert max([t.t_i + t.d_i for t in task.prev]) <= task.t_i + offset
+        assert task.t_i + offset + task.d_i <= min([t.t_i for t in task.next])
+        return True, 2
+    except AssertionError:
+        try:
+            if pos:
+                lasttask_fin = [t.t_i + t.d_i for t in flight.task_to_do if t.type.name == 'Ob']
+                assert lasttask_fin + offset <= flight.m_d
+            else:
+                firsttask_deb = [t.t_i for t in flight.task_to_do if t.type.name == 'In']
+                assert firsttask_deb + offset >= flight.m_a
+            return True, 1
+        except AssertionError:
+            return False, 0
+
+
+def heuristic_glouton(pb_):
+    """
+    :param pb_: problem completed with objects from obj
+    :return: une flotte avec toutes les infos de planning
+    """
+    list_of_flights = pb_.flights
+    all_tasks_to_do, fleet = list(), list()
+
+    # step 1 - position e_i and l_i for all tasks and put them as to be treated
+    actual_list_of_flights = sorted(list_of_flights, key=lambda fl_: fl_.m_d)
+    for fli in actual_list_of_flights:
+        make_ei(fli)
+        make_li(fli)
+        all_tasks_to_do += fli.task_to_do
+
+    for task in all_tasks_to_do:
+        task.t_i = task.e_i
+    dict_of_tasks = dict()
+    for v_type in pb_.vehicle_types:
+        dict_of_tasks[v_type.name] = [task for task in all_tasks_to_do if v_type == task.type.can_be_done_by]
+
+    fleet_dict = dict()
+    for vehicle_type, associated_tasks in dict_of_tasks.items():
+        while len(associated_tasks) > 0:
+            print(associated_tasks)
+            if vehicle_type not in fleet_dict.keys():
+                fleet_dict[vehicle_type] = list()
+            else:
+                task = associated_tasks.pop()
+                fleet_for_task = fleet_dict[vehicle_type]
+                if len(fleet_for_task) == 0:
+                    fleet_dict[vehicle_type].append(create_new_vehicle(task))
+                else:
+                    check = False
+                    for vehicle in fleet_for_task:
+                        if is_available_for_task(pb_, task, vehicle):
+                            vehicle.tasks.append(task)
+                            vehicle.t_dispo = task.t_i + task.d_i
+                            check = True
+                            break
+                        else:
+                            pass
+                            # on fera notre tambouille ici
+
+                    if check is False:
+                        new_vehicle = create_new_vehicle(task)
+                        fleet_dict[vehicle_type].append(new_vehicle)
+    print(fleet_dict)
+    fleet = list()
+    for fleet_t in fleet_dict.values():
+        fleet += fleet_t
+
+    return fleet
+
+
+
+
+'''
+    # step 2 - if fleet is empty, let's create a first vehicle for a first task
+    if len(fleet) == 0:
+        task_considered = all_tasks_to_do.pop(0)
+        new_vehicle = create_new_vehicle(task_considered)
+        fleet.append(new_vehicle)
+
+
+    # step 3 - for each task, if one of the vehicles is available, he will do it
+    while len(all_tasks_to_do) > 0:
+        task_considered = all_tasks_to_do.pop(0)
+        check = False
+        for vehicle in fleet:
+            mav_task = time_on_task(pb_, task_considered, vehicle)
+
+            if is_available_for_task(pb_, task_considered, vehicle):
+                vehicle.tasks.append(task_considered)
+                vehicle.t_dispo = task_considered.t_i + task_considered.d_i
+                check = True
+                break
+
+    # step 5 - if no vehicle got it, let's create a new one
+        if check is False:
+            new_vehicle = create_new_vehicle(task_considered)
+            fleet.append(new_vehicle)
+
+    # step 5 bis (optional) calculate the time at which each vehicle of the fleet should leave and return its base
+
+    # step 6 - all of our vehicles are given tasks and all tasks are given vehicles. Return the fleet.
+    return fleet
+'''
+
+test = model.ProblemH('vols_2.txt')
+test.vehicles = heuristic_glouton(test)
+disp.display_planning_per_vehicle_heuristic(test)

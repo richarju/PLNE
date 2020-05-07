@@ -125,6 +125,9 @@ class VehiculeType:
     def __repr__(self):
         return "(--V_Type-- {} SP{})".format(self.name, self.speed)
 
+    def __eq__(self, other):
+        return self.name == other.name
+
 
 
 class Vehicule:
