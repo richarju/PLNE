@@ -16,7 +16,6 @@ def make_time_for_task(flight):
     sort_tasks(tasks)
     init_time = flight.m_a
     for task_ in tasks:
-        print(task_.prev)
         task_.t_i = max([t.t_i + t.d_i for t in task_.prev]+[init_time])
     flight.task_to_do = tasks
 

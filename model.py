@@ -207,7 +207,7 @@ class ProblemH:
 
     def __repr__(self):
         return "---Problem Object--- \nnbr of flights: {}  \nnbr of tasks: {}  " \
-               "\nvehicles used: {}".format(len(self.flights), len(self.all_tasks), self.vehicles)
+               "\nvehicles used: {}".format(len(self.flights), len(self.all_tasks), len(self.vehicles))
 
     def set_up_what_vehicle_types_can_do_a_task_types(self):
         """

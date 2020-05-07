@@ -74,20 +74,30 @@ def display_planning_per_vehicle_heuristic(pb):
     label = list()
     parkings_used = list()
     solution_wo_nvr = [vehicle for vehicle in pb.vehicles if vehicle.type.name != 'NVR']
-    max_y = len(solution_wo_nvr) + 0.01 * scale_n
-    for i, vehicle in enumerate(solution_wo_nvr):
+    solution_only_nvr = [vehicle for vehicle in pb.vehicles if vehicle.type.name == 'NVR']
+    solution_final = solution_wo_nvr + solution_only_nvr
+    n_n_nvr = len(solution_wo_nvr)
+    max_y = len(solution_final) + 0.01 * scale_n
+    for i, vehicle in enumerate(solution_final):
         positions.append(i)
-        label.append('APV' + str(i+1) + ' ({})'.format(vehicle.type.name))
+        if i < n_n_nvr:
+            label.append('APV' + str(i+1) + ' ({})'.format(vehicle.type.name))
+        else:
+            label.append('NO VEHICLE')
         for task in vehicle.tasks:
-            beg = task.t_i
-            end = task.t_i + task.d_i
-            parkings_used.append(task.airplane.parking)
-            ax.plot([beg, end], [i, i], linewidth=2, color=color_list[task.airplane.parking-1],
-                    label='parking '+str(task.airplane.parking))
-            ax.text(beg + 2.5, i + 0.01 * scale_n, '{} - {}'.format(task.type.name, task.airplane.fl_nbr),
-                    ha="center", va="center", size=7, weight="bold")
-            ax.text(beg, i - 0.012 * scale_n, '{}'.format(beg), ha="center", va="center", size=6)
-            ax.text(end, i - 0.012 * scale_n, '{}'.format(end), ha="center", va="center", size=6)
+            if task.type.name not in ['In', 'Ob']:
+                beg = task.t_i
+                end = task.t_i + task.d_i
+                parkings_used.append(task.airplane.parking)
+                if task.type.name not in ['Db', 'Bd']:
+                    ax.plot([beg, end], [i, i], linewidth=2, color=color_list[task.airplane.parking-1],
+                            label='parking '+str(task.airplane.parking))
+                else:
+                    ax.plot([beg, end], [i, i], linewidth=2, color='grey')
+                ax.text(beg + 2.5, i + 0.01 * scale_n, '{} - {}'.format(task.type.name, task.airplane.fl_nbr),
+                        ha="center", va="center", size=7, weight="bold")
+                ax.text(beg, i - 0.012 * scale_n, '{}'.format(beg), ha="center", va="center", size=6)
+                ax.text(end, i - 0.012 * scale_n, '{}'.format(end), ha="center", va="center", size=6)
     for flight in pb.flights:
         ax.plot([flight.m_a-0.5, flight.m_a-0.5], [-0.5, max_y + pb.flights.index(flight) % 2],
                 linewidth=0.8, color=color_list[flight.parking-1])
