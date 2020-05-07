@@ -1,4 +1,5 @@
 import objects as obj
+import heuristic_2
 
 
 def make_time_for_task(flight):

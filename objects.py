@@ -27,6 +27,25 @@ class Airplane:
             returnable_data.append(Task(type_, durations[i], self, [task for task in returnable_data if
                                                                     task.type.name in type_.previous_tasks_names]))
 
+        next_dict = {'Ob': [],
+                     'Pb': ['Ob'],
+                     'Pw': ['Pb', 'Ob'],
+                     'Ld': ['Pb', 'Ob'],
+                     'Bd': ['Pb', 'Ob'],
+                     'Fl': ['Bd', 'Pb', 'Ob'],
+                     'Cl': ['Bd', 'Pb', 'Ob'],
+                     'Ct': ['Bd', 'Pb', 'Ob'],
+                     'Lv': ['Pw', 'Pb', 'Ob'],
+                     'Ul': ['Ld', 'Pb', 'Ob'],
+                     'Db': ['Fl', 'Ct', 'Cl', 'Bd', 'Pb', 'Ob'],
+                     'In': ['Db', 'Ul', 'Lv', 'Ct', 'Cl', 'Fl', 'Bd', 'Ld', 'Pw', 'Pb', 'Ob'],
+                     'TypeBegin': [],
+                     'TypeEnfding': []}
+
+        for task in returnable_data:
+            next_names = next_dict[task.type.name]
+            next_tasks = [task_ for task_ in returnable_data if task_.type.name in next_names]
+            task.next = next_tasks
         self.task_to_do = returnable_data
 
 
@@ -62,6 +81,7 @@ class Task:
         self.t_i = self.e_i  # on place le début de la tâche à l'arrivée de l'avion avant de faire le planning
         self.previous = list()
         self.prev = prev
+        self.next = list()
 
     def __repr__(self):
         return "--TASK {}-- duration:{} BEG {} flight: {}\n".format(self.type, self.d_i, self.t_i, self.airplane)
