@@ -6,12 +6,9 @@ import display_master as disp
 
 
 if __name__ == "__main__":
-    pb = model.Problem("vols_2.txt")
-    print(pb)
-    for task in pb.all_tasks[1:-1]:
-        task.previous = task.get_previous_tasks()
+    pb = model.ProblemH("vols_2.txt")
     pb.vehicles = heuristic.heuristic_glouton(pb)
-    disp.display_planning_per_vehicle(pb)
+    disp.display_planning_per_vehicle_heuristic(pb)
     """
     if len(sys.argv) == 2:
         try:

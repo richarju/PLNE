@@ -24,7 +24,8 @@ class Airplane:
         durations = [int(self.task_to_do[i]) for i in range(1, len(self.task_to_do), 2)]
         for i, task_name in enumerate(names):
             type_ = [task_type for task_type in task_types_list if task_type.name == task_name][0]
-            returnable_data.append(Task(type_, durations[i], self))
+            returnable_data.append(Task(type_, durations[i], self, [task for task in returnable_data if
+                                                                    task.type.name in type_.previous_tasks_names]))
 
         self.task_to_do = returnable_data
 
@@ -35,10 +36,11 @@ class TaskType:
     véhicule qu'on peut lui attribuer
     """
 
-    def __init__(self, name, previous_task_names):
+    def __init__(self, name, previous_task_names, indx):
         self.name = name  # nom de la task
         self.previous_tasks_names = previous_task_names  # graphe de precedence pour une activite (les noms sont ceux des types)
         self.can_be_done_by = None
+        self.index = indx
 
     def __repr__(self):
         return "(--T_TYPE-- {})".format(self.name)
@@ -49,7 +51,7 @@ class TaskType:
 
 class Task:
 
-    def __init__(self, type_, d_i, airplane):
+    def __init__(self, type_, d_i, airplane, prev):
         self.type = type_  # expected TaskType object
 
         self.d_i = d_i  # duration
@@ -59,9 +61,10 @@ class Task:
         self.vehicle = None  # instance de Vehicle qui sera concerne par cette tache
         self.t_i = self.e_i  # on place le début de la tâche à l'arrivée de l'avion avant de faire le planning
         self.previous = list()
+        self.prev = prev
 
     def __repr__(self):
-        return "--TASK {}-- duration:{} flight: {}\n".format(self.type, self.d_i, self.airplane)
+        return "--TASK {}-- duration:{} BEG {} flight: {}\n".format(self.type, self.d_i, self.t_i, self.airplane)
 
     def delta(self, vehicle):
         """
@@ -74,13 +77,17 @@ class Task:
         """returns 1 if a a vehicle of type vehicleType can perform such task"""
         return 1 if self.type.name in vehicle_type.can_do_names else 0
 
-    def get_previous_tasks(self):
+    '''def get_previous_tasks(self):
         returnable_data = list()
         prv_names = self.type.previous_tasks_names
         for task in self.airplane.task_to_do:
+            # print('ACFT', task.airplane)
+            # print('TASK', task)
+            print(task)
+            print('precedence ::::', prv_names)
             if task in prv_names:
                 returnable_data.append(task)
-        return returnable_data
+        return returnable_data'''
 
 
 class VehiculeType:
@@ -108,6 +115,7 @@ class Vehicule:
         self.tasks = []  # other tasks will be added through the process
         self.matrix_x = None  # to be used with plne afterward
         self.index_tasks = list()  # to be used with plne afterward
+        self.t_dispo = 0
 
     def __repr__(self):
         return "--VEHICLE {}-- tasks: {}\n".format(self.type, self.tasks)

@@ -8,7 +8,7 @@ class Problem:
     crée une istance du problème avec les bons objets
     """
 
-    def __init__(self, flight_filename):
+    def __init__(self, flight_filename, include_beg_end=True):
         """
         :param flight_filename: chaque instance dépend du programme de vol à traiter
         """
@@ -19,8 +19,10 @@ class Problem:
         self.bases_vehicles = data.make_base_matrix()
 
         # creation des types de tasks à faire
-        self.task_types = data.make_task_types()
-
+        if include_beg_end:
+            self.task_types = data.make_task_types()
+        else:
+            self.task_types = data.make_task_types()[2:]
         # creation des types de vehicules disponibles sur la plateforme
         self.vehicle_types = data.make_vehicle_types()
 
@@ -57,8 +59,8 @@ class Problem:
         The opposite is already true
         """
         for t_type in self.task_types:
-            vehicle_type = [vt for vt in self.vehicle_types if t_type.name in vt.can_do_names][0]
-            t_type.can_be_done_by = vehicle_type
+            vehicle_type = [vt for vt in self.vehicle_types if t_type.name in vt.can_do_names]
+            t_type.can_be_done_by = vehicle_type[0]
 
     def generate_vehicles(self):
         """
@@ -169,3 +171,50 @@ class Problem:
         self.make_array_after_plne(x, t)
         self.make_index_out_of_plne()
         self.attribution_task_to_vehicle()
+
+
+class ProblemH:
+    """
+    instance totale du probleme reprenant l'ensemble des odonnées de import_data.py
+    converties en objets de objects.py parfaitements instanciés pour une résolution algorithmique du problème
+    """
+
+    def __init__(self, flight_filename):
+
+        # creation des distances entre parkings
+        self.parkings = data.make_parking_matrix_h()
+        # creations des distances des bases aux parkings
+        self.bases_vehicles = data.make_base_matrix_h()
+
+        # creation des types de tasks à faire
+        self.task_types = data.make_task_types_h()
+        # creation des types de vehicules disponibles sur la plateforme
+        self.vehicle_types = data.make_vehicle_types_h()
+        # Ajout de la passerelle (NO VEHICLE REQUIRED --> NVR) pour pouvoir attribuer chaque tache a un vehicule
+        self.vehicle_types.append(obj.VehiculeType('NVR', 1, ['In', 'Ob', 'Bd', 'Db'], 1))
+        # Attribution des types de véhicules aux types de taches
+        self.set_up_what_vehicle_types_can_do_a_task_types()
+
+        # creation du programme de vol
+        self.flights = data.make_flight_list_h(flight_filename, self.task_types)
+        # rassemblement de l'ensemble des tasks à faire
+        self.all_tasks = data.make_all_tasks_h(self.flights)
+
+        # creation de la flotte de vehicules
+        self.vehicles = list()  # test: self.vehicles.append(obj.Vehicule(self.vehicle_types[0]))
+
+        self.decision_x = list()
+
+    def __repr__(self):
+        return "---Problem Object--- \nnbr of flights: {}  \nnbr of tasks: {}  " \
+               "\nvehicles used: {}".format(len(self.flights), len(self.all_tasks), self.vehicles)
+
+    def set_up_what_vehicle_types_can_do_a_task_types(self):
+        """
+        is meant to update self.task_types[i].can_be_done_by, for i in range(len(self.task_types)
+        --> after that, each type of task knows which type of vehicle can make it.
+        The opposite is already true
+        """
+        for t_type in self.task_types:
+            vehicle_type = [vt for vt in self.vehicle_types if t_type.name in vt.can_do_names][0]
+            t_type.can_be_done_by = vehicle_type

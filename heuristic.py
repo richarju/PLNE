@@ -16,7 +16,8 @@ def make_time_for_task(flight):
     sort_tasks(tasks)
     init_time = flight.m_a
     for task_ in tasks:
-        task_.t_i = max([t.t_i + t.d_i for t in task_.previous]+[init_time])
+        print(task_.prev)
+        task_.t_i = max([t.t_i + t.d_i for t in task_.prev]+[init_time])
     flight.task_to_do = tasks
 
 
@@ -55,7 +56,7 @@ def is_available_for_task(pb_, task_, vehicle):
     return False
 
 
-def time_on_task(pb, task, vehicle):
+def time_on_task(pb, task,vehicle):
         last_task = vehicle.tasks[-1]
         time_to_move = pb.parkings[last_task.airplane.parking - 1, task.airplane.parking-1] / vehicle.type.speed
         time_to_start = vehicle.t_dispo + time_to_move
