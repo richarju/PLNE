@@ -85,7 +85,7 @@ class Task:
         self.next = list()
 
     def __repr__(self):
-        return "--{} for {}-- di={}, ti=({},{})\n".format(self.type.name, self.airplane.fl_nbr, self.d_i, self.e_i, self.l_i)
+        return "--{} for {}-- di={}, ti={}\n".format(self.type.name, self.airplane.fl_nbr, self.d_i, self.t_i)
 
     def delta(self, vehicle):
         """

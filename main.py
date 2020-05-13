@@ -3,10 +3,26 @@ import model
 import solver
 import heuristic
 import display_master as disp
+import verification as vnv
 
 
 if __name__ == "__main__":
-    if sys.argv[2] == '-heuristic':
+    if sys.argv[2] == '-heuritest':
+        if len(sys.argv) == 3:
+            try:
+                pb = model.ProblemH(sys.argv[1])
+                pb.vehicles = heuristic.heuristic_glouton(pb)
+                pb_init = model.ProblemH(sys.argv[1])
+                test = vnv.Verification(pb_init, pb)
+                test.execute()
+                disp.display_planning_per_vehicle_heuristic(pb)
+
+            except FileNotFoundError:
+                print('--Le fichier de vol mentionné n\'est pas répertorié--')
+        else:
+            print('--L\'exécution du test d\'heuristique ne prend pas d\'autres arguments--')
+
+    elif sys.argv[2] == '-heuristic':
         if len(sys.argv) == 3:
             try:
                 pb = model.ProblemH(sys.argv[1])

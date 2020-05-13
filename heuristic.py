@@ -55,7 +55,7 @@ def is_available_for_task(pb_, task_, vehicle):
     return False
 
 
-def time_on_task(pb, task,vehicle):
+def time_on_task(pb, task, vehicle):
         last_task = vehicle.tasks[-1]
         time_to_move = pb.parkings[last_task.airplane.parking - 1, task.airplane.parking-1] / vehicle.type.speed
         time_to_start = vehicle.t_dispo + time_to_move
@@ -65,7 +65,6 @@ def time_on_task(pb, task,vehicle):
 def create_new_vehicle(task_):
     """
     :param task_: task that leads to creating the new vehicle
-    :param vehicle_types: list of all vehicle types
     :return: a new vehicle that is already set to go to the task in argument
     """
     type_ = task_.type.can_be_done_by
