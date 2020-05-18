@@ -4,6 +4,7 @@ import solver
 import heuristic
 import display_master as disp
 import verification as vnv
+import matplotlib.pyplot as plt
 
 
 if __name__ == "__main__":
@@ -11,11 +12,21 @@ if __name__ == "__main__":
         if len(sys.argv) == 3:
             try:
                 pb = model.ProblemH(sys.argv[1])
-                pb.vehicles = heuristic.heuristic_glouton(pb)
+                pb.vehicles, historic_fleet = heuristic.heuristic_glouton(pb)
                 pb_init = model.ProblemH(sys.argv[1])
                 test = vnv.Verification(pb_init, pb)
                 test.execute()
-                disp.display_planning_per_vehicle_heuristic(pb)
+                for flt in historic_fleet:
+                    fig, ax = plt.subplots()
+                    pb.vehicles = flt
+                    disp.display_planning_per_vehicle_heuristic(pb, fig, ax)
+                    plt.show(block=False)
+                    plt.pause(0.03)
+                    plt.close(fig)
+                # print(pb)
+                fig, ax = plt.subplots()
+                disp.display_planning_per_vehicle_heuristic(pb, fig, ax)
+                plt.show(block=True)
 
             except FileNotFoundError:
                 print('--Le fichier de vol mentionné n\'est pas répertorié--')
@@ -27,9 +38,11 @@ if __name__ == "__main__":
             try:
                 pb = model.ProblemH(sys.argv[1])
                 print('-------HEURISTIC SOLVER------')
-                pb.vehicles = heuristic.heuristic_glouton(pb)
+                pb.vehicles, historic_of_fleet = heuristic.heuristic_glouton(pb)
                 print(pb)
-                disp.display_planning_per_vehicle_heuristic(pb)
+                fig, ax = plt.subplots()
+                disp.display_planning_per_vehicle_heuristic(pb, fig, ax)
+                plt.show(block=True)
             except FileNotFoundError:
                 print('--Le fichier de vol mentionné n\'est pas répertorié--')
         elif len(sys.argv) == 4:

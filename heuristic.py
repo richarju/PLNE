@@ -82,6 +82,7 @@ def heuristic_glouton(pb_):
     list_of_flights = pb_.flights
     vehicle_types = pb_.vehicle_types
     all_tasks_to_do, fleet = list(), list()
+    fleet_historic = list()
 
     # step 1 - position t_i for all tasks and put them as to be treated
     actual_list_of_flights = sorted([fl for fl in list_of_flights], key=lambda fl: fl.m_d)
@@ -94,7 +95,7 @@ def heuristic_glouton(pb_):
         task_considered = all_tasks_to_do.pop(0)
         new_vehicle = create_new_vehicle(task_considered)
         fleet.append(new_vehicle)
-
+        fleet_historic.append(fleet.copy())
     # step 3 - for each task, if one of the vehicles is available, he will do it
     while len(all_tasks_to_do) > 0:
         task_considered = all_tasks_to_do.pop(0)
@@ -113,7 +114,30 @@ def heuristic_glouton(pb_):
             new_vehicle = create_new_vehicle(task_considered)
             fleet.append(new_vehicle)
 
-    # step 5 bis (optional) calculate the time at which each vehicle of the fleet should leave and return its base
+        fleet_historic.append(fleet.copy())
 
     # step 6 - all of our vehicles are given tasks and all tasks are given vehicles. Return the fleet.
-    return fleet
+    return fleet, fleet_historic
+
+
+def heuristic_2(pb):
+    list_of_tasks = pb.all_tasks
+    vehicle_types = pb.vehicle_types
+    fleet = list()
+
+    for vt in vehicle_types:
+        print(vt)
+        tasks_of_vt = [task for task in list_of_tasks if task.type.can_be_done_by.name == vt.name]
+        tasks_vt_ord = sorted(tasks_of_vt, key=lambda t: t.t_i)
+
+        if len(fleet) == 0:
+            task_ = tasks_vt_ord.pop()
+            new_vehicle = create_new_vehicle(task_)
+            fleet.append(new_vehicle)
+
+        for vehicle in [v for v in fleet]:
+            pass
+
+    print(tasks_of_vt)
+    print(fleet)
+

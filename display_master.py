@@ -62,14 +62,13 @@ def display_planning_per_vehicle(pb):
     plt.show()
 
 
-def display_planning_per_vehicle_heuristic(pb):
+def display_planning_per_vehicle_heuristic(pb, fig, ax):
     """
     :param pb: problem solved
     :return: a matplotlib display that shows the planning for each vehicle
     """
     scale_n = len(pb.vehicles)
     color_list = ['red', 'blue', 'green', 'black', 'magenta', 'darkred', 'darkblue','orange', 'yellow', 'cyan']
-    fig, ax = plt.subplots()
     positions = list()
     label = list()
     parkings_used = list()
@@ -113,4 +112,3 @@ def display_planning_per_vehicle_heuristic(pb):
     plt.xlabel('Time (min)')
     plt.ylabel('Airport Vehicles (APV)')
     plt.title("Airport Vehicles Fleet Planning - Heuristic Solved")
-    plt.show()
